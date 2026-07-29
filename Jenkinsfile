@@ -60,16 +60,12 @@ pipeline {
         // Stage 5: Container Security Scan via Trivy Container
         stage('Trivy Image Vulnerability Scan') {
             steps {
-               echo "[INFO] Scanning Docker image ${APP_NAME}:${IMAGE_TAG} with Trivy Container..."
-               sh """
-               docker run --rm \
-               -v /var/run/docker.sock:/var/run/docker.sock \
-               aquasec/trivy:latest \
-               image \
-               --timeout 30m \
-               --db-repository ghcr.io/aquasecurity/trivy-db \
-               --severity HIGH,CRITICAL \
-                ${APP_NAME}:${IMAGE_TAG}
+                echo "[INFO] Scanning Docker image ${APP_NAME}:${IMAGE_TAG} with Trivy Container..."
+                sh """
+                    docker run --rm \
+                        -v /var/run/docker.sock:/var/run/docker.sock \
+                        --timeout 30m \
+                        aquasec/trivy:latest image --severity HIGH,CRITICAL ${APP_NAME}:${IMAGE_TAG}
                 """
             }
         }
