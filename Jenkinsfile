@@ -66,6 +66,7 @@ pipeline {
                -v /var/run/docker.sock:/var/run/docker.sock \
                aquasec/trivy:latest \
                image \
+               --timeout 20m \
                --db-repository ghcr.io/aquasecurity/trivy-db \
                --severity HIGH,CRITICAL \
                 ${APP_NAME}:${IMAGE_TAG}
