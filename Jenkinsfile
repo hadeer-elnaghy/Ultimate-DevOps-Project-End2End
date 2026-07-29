@@ -39,15 +39,13 @@ pipeline {
         stage('Snyk Security Scan') {
             steps {
                 echo '[INFO] Scanning node dependencies using official Snyk container...'
-                sh """
-                   docker run --rm \
-                    -v \$(pwd):/apps \
-                    -v ~/.kube:/root/.kube \
-                    -v /var/run/docker.sock:/var/run/docker.sock \
-                    -w /apps \
-                    willhallonline/ansible:latest \
-                    ansible-playbook ansible/deploy.yml -e "app_image_tag=${IMAGE_TAG}"
-               """
+                sh '''
+                    docker run --rm \
+                        --volumes-from jenkins-server \
+                        -w ${WORKSPACE} \
+                        -e SNYK_TOKEN=${SNYK_TOKEN} \
+                        snyk/snyk:node snyk test --severity-threshold=high || true
+                '''
             }
         }
 
