@@ -1,0 +1,14 @@
+{
+  "name": "ultimate-devops-app",
+  "version": "1.0.0",
+  "description": "Enterprise End-to-End DevOps Project Application",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "echo \"Error: no test specified\" && exit 0"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "prom-client": "^15.0.0"
+  }
+}
