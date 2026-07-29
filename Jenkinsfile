@@ -72,38 +72,11 @@ pipeline {
             }
         }
 
-        stage('Debug Workspace') {
-    steps {
-        sh '''
-            echo "WORKSPACE = ${WORKSPACE}"
-            echo "Current directory:"
-            pwd
-
-            echo "Workspace files:"
-            find "${WORKSPACE}" -maxdepth 3 -type f | sort
-
-            echo "Ansible directory:"
-            ls -la "${WORKSPACE}/ansible" || true
-
-            echo "Deploy playbook:"
-            ls -la "${WORKSPACE}/ansible/deploy.yml" || true
-        '''
-    }
-}       
-
         // Stage 6: Automated Deployment via Ansible to Kubernetes
         stage('Deploy to K8s via Ansible') {
             steps {
                 echo '[INFO] Executing Ansible Playbook for Kubernetes Deployment...'
-                sh """
-                 docker run --rm \
-                  -v ${WORKSPACE}:/apps \
-                  -v ~/.kube:/root/.kube \
-                  -v /var/run/docker.sock:/var/run/docker.sock \
-                  -w /apps \
-                  willhallonline/ansible:latest \
-                  ansible-playbook ansible/deploy.yml -e "app_image_tag=${IMAGE_TAG}"
-              """    
+                sh 'ansible-playbook ansible/deploy.yml'
             }
         }
     }
