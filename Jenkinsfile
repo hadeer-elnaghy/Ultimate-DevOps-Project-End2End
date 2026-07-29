@@ -76,7 +76,15 @@ pipeline {
         stage('Deploy to K8s via Ansible') {
             steps {
                 echo '[INFO] Executing Ansible Playbook for Kubernetes Deployment...'
-                sh 'ansible-playbook ansible/deploy.yml'
+                sh """
+                 docker run --rm \
+                  -v ${WORKSPACE}:/apps \
+                  -v ~/.kube:/root/.kube \
+                  -v /var/run/docker.sock:/var/run/docker.sock \
+                  -w /apps \
+                  willhallonline/ansible:latest \
+                  ansible-playbook ansible/deploy.yml -e "app_image_tag=${IMAGE_TAG}"
+              """    
             }
         }
     }
