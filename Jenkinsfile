@@ -74,6 +74,25 @@ pipeline {
             }
         }
 
+        stage('Debug Workspace') {
+    steps {
+        sh '''
+            echo "WORKSPACE = ${WORKSPACE}"
+            echo "Current directory:"
+            pwd
+
+            echo "Workspace files:"
+            find "${WORKSPACE}" -maxdepth 3 -type f | sort
+
+            echo "Ansible directory:"
+            ls -la "${WORKSPACE}/ansible" || true
+
+            echo "Deploy playbook:"
+            ls -la "${WORKSPACE}/ansible/deploy.yml" || true
+        '''
+    }
+}       
+
         // Stage 6: Automated Deployment via Ansible to Kubernetes
         stage('Deploy to K8s via Ansible') {
             steps {
