@@ -63,12 +63,11 @@ pipeline {
                echo "[INFO] Scanning Docker image ${APP_NAME}:${IMAGE_TAG} with Trivy Container..."
                sh """
                docker run --rm \
-                -v /var/run/docker.sock:/var/run/docker.sock \
-                -v trivy_cache:/root/.cache/ \
-                aquasec/trivy:latest image \
-                --db-repository ghcr.io/aquasec/trivy-db:2 \
-                --timeout 10m \
-                --severity HIGH,CRITICAL \
+               -v /var/run/docker.sock:/var/run/docker.sock \
+               aquasec/trivy:latest \
+               image \
+               --db-repository ghcr.io/aquasecurity/trivy-db \
+               --severity HIGH,CRITICAL \
                 ${APP_NAME}:${IMAGE_TAG}
                 """
             }
